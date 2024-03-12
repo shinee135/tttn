@@ -25,7 +25,7 @@ export const loginService = async (email, password) => {
         }); 
         const token = jwt.sign({
             id: user.id,
-            // idRole: user.RoleId
+            idRole: user.role_id
         }, process.env.JWT_KEY);
         
         return {
@@ -46,20 +46,31 @@ export const registerService = async (name, email, password, confirmPassword, nu
         if(user) return createError(400, "Email đã tồn tại!")
         if(password !== confirmPassword) return createError(400, 'Mật khẩu nhập lại không chính xác !')
         if(password.length < 6) return createError(400, 'Mật khẩu phải lớn hơn 6 chữ !')
-        const hassPass = await argon2.hash(password)
-        // const Customer_id = 2;
-        const UserLogin = await db.user.create({
+        const hashPass = await argon2.hash(password)
+        const isCustomer = await db.role.findOne({
+            where: {
+                name: 'Customer'
+            }
+        })
+        if (!isCustomer) {
+            throw createError(400, 'Không tìm thấy vai trò "Customer" trong cơ sở dữ liệu');
+        } else 
+        {
+            console.log(isCustomer.id)
+            
+        }
+        const NewUser = await db.user.create({
             name,
             email,
             number,
             address,
             age,
-            password : hassPass,
-            // role_id : isCustomer.id,
+            password : hashPass,            
             height,
-            weight
+            weight,
+            role_id : isCustomer.id,
         })
-        return UserLogin;
+        return NewUser
     } catch (error) {
         console.log(error);
     }

@@ -1,6 +1,9 @@
 import configdb from "../../dbconfig/db.config.js";
 import { Sequelize } from "sequelize";
 import User from "./User.js";
+import Role from "./Role.js";
+import Disease from "./Disease.js";
+import Status from "./Status.js";
 
 
 const sequelize = new Sequelize(
@@ -25,5 +28,12 @@ const sequelize = new Sequelize(
 const db = {}
 db.sequelize = sequelize
 db.user = User(sequelize)
+db.role = Role(sequelize)
+db.disease = Disease(sequelize)
+db.status = Status(sequelize)
+db.disease.belongsToMany(db.status, {
+  through: 'Disease_status',
+})
+db.status.belongsToMany(db.disease, {through: 'Disease_status'})
 
 export default db;

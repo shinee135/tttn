@@ -1,4 +1,6 @@
 import routerAuth from "./routes/auth_routes.js";
+import routerDisease from "./routes/disease_routes.js";
+import routerStatus from "./routes/status_routes.js";
 import db from "./models/entities/index.js";
 import express from "express";
 import bodyParser from "body-parser";
@@ -25,6 +27,8 @@ app.use(cors({
 }));
 //api
 app.use('/api/auth', routerAuth)
+app.use('/api/disease',routerDisease)
+app.use('/api/status',routerStatus)
 //Connect database
 try {
   await db.sequelize.authenticate();

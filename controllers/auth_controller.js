@@ -6,13 +6,15 @@ import {
 export const loginController = async(req, res, next) =>{
     try {
         const data = req.body;
+        
         const token = await loginService(data.email, data.password)
+        console.log(token)
         if (token instanceof Error) return next(token)
         return res.cookie('accessToken', token.token, {
             httpOnly: true,
             secure: true,
             sameSite: 'None',
-            domain: '',
+            domain: '/localhost',
             path: "/",
         }).status(200).send(token.user)
     } catch (error) {

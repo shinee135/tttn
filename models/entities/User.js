@@ -26,15 +26,14 @@ const User = (sequelize) => sequelize.define('User',{
     type: Sequelize.STRING,
     allowNull: false,
   },   
-  // role: {
-  //   type: Sequelize.ENUM("admin", "customer"),
-  //   allowNull: false,
-  // },
   height: {
     type: Sequelize.INTEGER,
   },
   weight: {
     type: Sequelize.INTEGER,
+  },
+  role_id:{
+    type : Sequelize.INTEGER,
   },
   createdAt: {
     type: DataTypes.DATE, 
