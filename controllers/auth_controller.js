@@ -25,7 +25,7 @@ export const registerController = async (req, res, next) =>{
     try {
         const data = req.body;
         console.log(data)
-        const user = await registerService(data.name, data.email, data.password, data.confirmPassword, data.number, data.address, data.age, data.height, data.weight);
+        const user = await registerService(data.name, data.email, data.password, data.confirmPassword, data.number, data.address, data.age);
         if (user instanceof Error) return next(user)
         return res.status(200).send(user)
     } catch (error) {
