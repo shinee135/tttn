@@ -8,8 +8,8 @@ import jwt from 'jsonwebtoken'
 dotenv.config()
 export const loginService = async (email, password) => {
     try {
-        const checkEmail = await db.user.findOne({
-            where: { email },
+        const checkEmail = await db.user.findOne({          
+            where: { email }
         });     
         if (!checkEmail) return createError(400, "Tài khoản không chính xác!");
         
@@ -21,6 +21,11 @@ export const loginService = async (email, password) => {
         }
         const user = await db.user.findOne({
             where: { email },
+            include:[
+                {
+                    model:db.bmi,
+                }
+            ],
             attributes: { exclude: ['password'] }
         }); 
         const token = jwt.sign({

@@ -46,7 +46,7 @@ db.status.belongsToMany(db.disease, {
 db.bmi.belongsToMany(db.user,{
   through: 'User_bmi'
 })
-db.user.belongsTo(db.bmi,{
+db.user.belongsToMany(db.bmi,{
   through: 'User_bmi'
 })
 
