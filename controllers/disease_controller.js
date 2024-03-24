@@ -2,7 +2,8 @@ import { Op } from "sequelize";
 import { 
     createDiseaseService, 
     deleteDiseaseService, 
-    getDiseasesService, 
+    getDiseasesByNameService, 
+    getDiseasesAllService,
     updateDiseaseService,
     getDiseasesByStatusService
     } 
@@ -14,18 +15,52 @@ export const createDisease = async(req, res, next) =>{
         
         // if(req.idRole !== 2) return next(createError(400, 'Bạn không có quyền này!'));
         const data = req.body;
-        const disease = await createDiseaseService(data.name, data.info);
-        if(disease instanceof Error) return next(disease);
-        res.status(200).send(disease);
+        const { name, info, statuses ,diets} = data;
+        
+
+        // // Tạo mảng promises cho mỗi trạng thái và chế độ dinh dưỡng
+        // const statusPromises = statuses.map(status => createDiseaseService(name, info, status, diets));
+        // const dietPromises = diets.map(diet => createDiseaseService(name, info, statuses, diet));
+
+        // // Gộp hai mảng promises lại thành một mảng duy nhất
+        // const allPromises = statusPromises.concat(dietPromises);
+
+        // // Chờ tất cả các promise hoàn thành
+        // const results = await Promise.all(allPromises);
+
+        // // Xử lý kết quả
+        // const disease = results.filter(result => !(result instanceof Error));
+
+        const disease = await createDiseaseService(data.name, data.info,data.statuses, data.diets);
+
+        if (!Array.isArray(statuses) || !Array.isArray(diets)) {
+            return next(createError(400, 'Các trạng thái và chế độ dinh dưỡng phải được cung cấp dưới dạng mảng.'));
+        }
+        if(disease instanceof Error) return next(disease)
+        if (disease.length === 0) {
+            // Nếu không có bệnh nào được tạo thành công
+            return next(createError(400, 'Không thể tạo bất kỳ bệnh nào.'));
+        }
+        res.status(200).send(disease);;
+    } catch (error) {
+        next(error)
+    }
+}
+export const getDiseasesAll = async(req, res, next) =>{
+    try {
+        const data = req.body;
+        const diseases = await getDiseasesAllService();
+        if(diseases instanceof Error) return next(diseases);
+        res.status(200).send(diseases);
     } catch (error) {
         next(error)
     }
 }
 
-export const getDiseases = async(req, res, next) =>{
+export const getDiseasesByName = async(req, res, next) =>{
     try {
         const data = req.body;
-        const diseases = await getDiseasesService(data.name);
+        const diseases = await getDiseasesByNameService(data.name);
         if(diseases instanceof Error) return next(diseases);
         res.status(200).send(diseases);
     } catch (error) {

@@ -4,6 +4,8 @@ import User from "./User.js";
 import Role from "./Role.js";
 import Disease from "./Disease.js";
 import Status from "./Status.js";
+import Diet from "./Diet.js";
+import Bmi from "./Bmi.js";
 
 
 const sequelize = new Sequelize(
@@ -31,9 +33,27 @@ db.user = User(sequelize)
 db.role = Role(sequelize)
 db.disease = Disease(sequelize)
 db.status = Status(sequelize)
+db.diet = Diet(sequelize)
+db.bmi = Bmi(sequelize)
+
 db.disease.belongsToMany(db.status, {
   through: 'Disease_status',
 })
-db.status.belongsToMany(db.disease, {through: 'Disease_status'})
+db.status.belongsToMany(db.disease, {
+  through: 'Disease_status'
+})
 
+db.bmi.belongsToMany(db.user,{
+  through: 'User_bmi'
+})
+db.user.belongsTo(db.bmi,{
+  through: 'User_bmi'
+})
+
+db.disease.belongsToMany(db.diet, {
+  through: 'Diet_disease',
+})
+db.diet.belongsToMany(db.disease, {
+  through: 'Diet_disease'
+})
 export default db;

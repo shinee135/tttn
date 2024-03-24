@@ -7,6 +7,8 @@ import bodyParser from "body-parser";
 import mysql from "mysql";
 import dotenv from 'dotenv';
 import cors from 'cors';
+import routerDiet from "./routes/diet_routes.js";
+import routerBmi from "./routes/bmi_routes.js";
 
 dotenv.config()
 // create express app
@@ -29,6 +31,8 @@ app.use(cors({
 app.use('/api/auth', routerAuth)
 app.use('/api/disease',routerDisease)
 app.use('/api/status',routerStatus)
+app.use('/api/diet',routerDiet)
+app.use('/api/bmi',routerBmi)
 //Connect database
 try {
   await db.sequelize.authenticate();

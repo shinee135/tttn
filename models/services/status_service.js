@@ -36,8 +36,17 @@ export const deleteStatusService = async(id)=>{
         return error;
     }
 }
+export const getStatusService = async()=>{
+    try {
+        const status = await db.status.findAll({});
+        if(status.length == 0) return createError(400, 'Không có Bệnh!')
+        return status;
+    } catch (error) {
+        return error;
+    }
+}
 
-export const getStatusService = async(name_status)=>{
+export const getStatusByNameService = async(name_status)=>{
     try {
         const status = await db.status.findAll({where : {name : name_status}});
         if(status.length == 0) return createError(400, 'Không có Bệnh!')

@@ -2,25 +2,50 @@ import e from "express";
 import db from "../entities/index.js"
 import createError from "../../ultis/createError.js";
 import { Op } from "sequelize";
-export const createDiseaseService = async(name, info) =>{
+export const createDiseaseService = async (name, info, statuses, diets) => {
     try {
+        // Kiểm tra xem bệnh có tồn tại không
         const checkName = await db.disease.findOne({
-            where : {
+            where: {
                 name
             }
-        })
-        if(checkName) return createError(400, 'Bệnh đã tồn tại!')
-        const disease = await db.disease.create({
-            name,
-            info,
-        })
-        if(!disease) return createError(400, 'Thêm bệnh không thành công!')
-        return disease;
+        });
+
+        if (checkName) {
+            throw createError(400, 'Bệnh đã tồn tại!');
+        }
+
+        // Bắt đầu một transaction
+        const transaction = await db.sequelize.transaction();
+
+        try {
+            // Tạo mới bệnh
+            const disease = await db.disease.create({
+                name,
+                info
+            }, { transaction });
+
+            // Thêm các trạng thái vào bệnh
+            await disease.addStatuses(statuses, { transaction });
+
+            // Thêm các chế độ dinh dưỡng vào bệnh
+            await disease.addDiets(diets, { transaction });
+
+            // Commit transaction nếu mọi thứ thành công
+            await transaction.commit();
+
+            return disease;
+        } catch (error) {
+            // Nếu có lỗi, rollback transaction
+            await transaction.rollback();
+            throw error;
+        }
     } catch (error) {
         console.log(error);
-        return error;
+        throw error;
     }
-}
+};
+
 
 export const deleteDiseaseService = async(id)=>{
     try {
@@ -29,7 +54,14 @@ export const deleteDiseaseService = async(id)=>{
         const delete_disease = await db.disease.destroy({
             where : {id}
         })
+        const deleted_status = await db.disease_status.destroy({
+            where: {
+                id: diseaseId
+            }
+        });
+        
         if(delete_disease == 0) return createError(400, 'Xoá Bệnh không thành công!');
+        if(deleted_status == 0) return createError(400, 'Xoá trạng thái không thành công!');
         return {
             message: 'Xoá thành công!'
         };
@@ -37,10 +69,40 @@ export const deleteDiseaseService = async(id)=>{
         return error;
     }
 }
-
-export const getDiseasesService = async(name_disease)=>{
+export const getDiseasesAllService = async(name_disease)=>{
     try {
-        const diseases = await db.disease.findAll({where : {name : name_disease}});
+        const diseases = await db.disease.findAll({
+            include:[
+                {
+                    model: db.status
+                },
+                {
+                    model: db.diet
+                }
+            ],
+        });
+        if(diseases.length == 0) return createError(400, 'Không có Bệnh!')
+        return diseases;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const getDiseasesByNameService = async(name_disease)=>{
+    try {
+        const diseases = await db.disease.findAll({
+            include:[
+                {
+                    model:db.status,
+                }
+            ],
+            include:[
+                {
+                    model:db.diet,
+                }
+            ],
+            where : {name : name_disease}
+        });
         if(diseases.length == 0) return createError(400, 'Không có Bệnh!')
         return diseases;
     } catch (error) {
@@ -54,6 +116,11 @@ export const getDiseasesByStatusService = async(name_status)=>{
                 {
                     model:db.status,
                     where : name_status
+                }
+            ],
+            include:[
+                {
+                    model:db.diet,
                 }
             ],
 
