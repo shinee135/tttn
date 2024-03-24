@@ -104,6 +104,7 @@ export const getDiseasesByNameService = async(name_disease)=>{
         if(diseases.length == 0) return createError(400, 'Không có Bệnh!')
         return diseases;
     } catch (error) {
+        console.log(error)
         return error;
     }
 }

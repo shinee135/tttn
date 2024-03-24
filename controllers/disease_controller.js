@@ -60,14 +60,8 @@ export const getDiseasesAll = async(req, res, next) =>{
 export const getDiseasesByName = async(req, res, next) =>{
     try {
         const data = req.body;
-        const q = req.query;
-        
-        const name_disease = {
-            ...(q.name_disease && {name : {
-                [Op.like]: `%${q.name_disease}%`,
-            }}),
-        }
-        const diseases = await getDiseasesByNameService(name_disease);
+
+        const diseases = await getDiseasesByNameService(data.name);
         if(diseases instanceof Error) return next(diseases);
         res.status(200).send(diseases);
     } catch (error) {
