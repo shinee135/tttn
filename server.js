@@ -9,6 +9,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import routerDiet from "./routes/diet_routes.js";
 import routerBmi from "./routes/bmi_routes.js";
+import routerUser from "./routes/user_route.js";
 
 dotenv.config()
 // create express app
@@ -33,6 +34,7 @@ app.use('/api/disease',routerDisease)
 app.use('/api/status',routerStatus)
 app.use('/api/diet',routerDiet)
 app.use('/api/bmi',routerBmi)
+app.use('/api/user',routerUser)
 //Connect database
 try {
   await db.sequelize.authenticate();

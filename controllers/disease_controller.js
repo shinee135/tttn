@@ -17,20 +17,6 @@ export const createDisease = async(req, res, next) =>{
         // if(req.idRole !== 2) return next(createError(400, 'Bạn không có quyền này!'));
         const data = req.body;
         const { name, info, statuses ,diets} = data;
-        
-
-        // // Tạo mảng promises cho mỗi trạng thái và chế độ dinh dưỡng
-        // const statusPromises = statuses.map(status => createDiseaseService(name, info, status, diets));
-        // const dietPromises = diets.map(diet => createDiseaseService(name, info, statuses, diet));
-
-        // // Gộp hai mảng promises lại thành một mảng duy nhất
-        // const allPromises = statusPromises.concat(dietPromises);
-
-        // // Chờ tất cả các promise hoàn thành
-        // const results = await Promise.all(allPromises);
-
-        // // Xử lý kết quả
-        // const disease = results.filter(result => !(result instanceof Error));
 
         const disease = await createDiseaseService(data.name, data.info,data.statuses, data.diets);
 

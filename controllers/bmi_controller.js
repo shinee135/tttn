@@ -39,7 +39,7 @@ export const updateBmi = async(req, res, next) =>{
         const data = req.body;
         const update_bmi = await updateBmiService(data.name,id)
         if(update_bmi instanceof Error) return next(update_bmi);
-        res.bmi(200).send(update_bmi);
+        res.status(200).send(update_bmi);
     } catch (error) {
         next(error)   
     }

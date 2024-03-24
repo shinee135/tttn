@@ -6,6 +6,7 @@ import Disease from "./Disease.js";
 import Status from "./Status.js";
 import Diet from "./Diet.js";
 import Bmi from "./Bmi.js";
+import User_bmi from "./User_bmi.js";
 
 
 const sequelize = new Sequelize(
@@ -35,6 +36,7 @@ db.disease = Disease(sequelize)
 db.status = Status(sequelize)
 db.diet = Diet(sequelize)
 db.bmi = Bmi(sequelize)
+db.user_bmi = User_bmi(sequelize)
 
 db.disease.belongsToMany(db.status, {
   through: 'Disease_status',
