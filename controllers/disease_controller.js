@@ -57,15 +57,16 @@ export const getDiseasesAll = async(req, res, next) =>{
     }
 }
 
-export const getDiseasesByName = async(req, res, next) =>{
+export const getDiseasesByName = async (req, res, next) => {
     try {
-        const data = req.body;
-
-        const diseases = await getDiseasesByNameService(data.name);
-        if(diseases instanceof Error) return next(diseases);
+        const q = req.query;
+        const name_disease = q.name_disease ? `%${q.name_disease}%` : null;
+        const diseases = await getDiseasesByNameService(name_disease);
+        if (diseases instanceof Error) return next(diseases);
         res.status(200).send(diseases);
     } catch (error) {
-        next(error)
+        console.log(error);
+        next(error);
     }
 }
 export const getDiseasesByStatus = async(req, res, next) =>{

@@ -88,23 +88,23 @@ export const getDiseasesAllService = async(name_disease)=>{
     }
 }
 
-export const getDiseasesByNameService = async(name_disease)=>{
+export const getDiseasesByNameService = async (name_disease) => {
     try {
         const diseases = await db.disease.findAll({
-            include:[
+            include: [
                 {
-                    model:db.status,
+                    model: db.status,
                 },
                 {
-                    model:db.diet,
+                    model: db.diet,
                 }
             ],
-            where : {name : name_disease}
+            where: name_disease ? { name: { [Op.like]: name_disease } } : {} // Chỉ áp dụng toán tử like khi name_disease tồn tại
         });
-        if(diseases.length == 0) return createError(400, 'Không có Bệnh!')
+        if (diseases.length === 0) return createError(400, 'Không có Bệnh!');
         return diseases;
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return error;
     }
 }
