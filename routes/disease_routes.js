@@ -6,7 +6,8 @@ import {
      updateDisease,
      getDiseasesByName,
      getDiseasesAll,
-     getDiseasesByStatus
+     getDiseasesByStatus,
+     getDiseasesById
 } 
 from '../controllers/disease_controller.js';
 
@@ -17,4 +18,5 @@ routerDisease.get('/get',getDiseasesAll)
 routerDisease.get('/searchByName',getDiseasesByName)
 routerDisease.put('/update/:id',updateDisease)
 routerDisease.get('/searchByStatus',getDiseasesByStatus)
+routerDisease.get('/searchById/:id',getDiseasesById)
 export default routerDisease;

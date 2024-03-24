@@ -88,9 +88,29 @@ export const getDiseasesAllService = async(name_disease)=>{
     }
 }
 
+export const getDiseasesByIdService = async(id) =>{
+    try {
+        const disease = await db.disease.findOne({
+            where : {id},
+            include : [
+                {
+                    model : db.status,
+                },
+                {
+                    model : db.diet
+                },
+            ]   
+        })
+        if(!disease) return createError(400, 'Không có sách!')
+        return disease;
+    } catch (error) {
+        return error;
+    }
+}   
+
 export const getDiseasesByNameService = async (name_disease) => {
     try {
-        const diseases = await db.disease.findAll({
+        const diseases = await db.disease.findOne({
             include: [
                 {
                     model: db.status,

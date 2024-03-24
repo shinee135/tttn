@@ -5,7 +5,8 @@ import {
     getDiseasesByNameService, 
     getDiseasesAllService,
     updateDiseaseService,
-    getDiseasesByStatusService
+    getDiseasesByStatusService,
+    getDiseasesByIdService
     } 
 from "../models/services/disease_service.js";
 import createError from "../ultis/createError.js"
@@ -52,6 +53,16 @@ export const getDiseasesAll = async(req, res, next) =>{
         const diseases = await getDiseasesAllService();
         if(diseases instanceof Error) return next(diseases);
         res.status(200).send(diseases);
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getDiseasesById  = async(req, res, next) =>{
+    try {
+        const disease = await getDiseasesByIdService(req.params.id)
+        if(disease instanceof Error) return next(disease)
+        return res.status(200).send(disease);
     } catch (error) {
         next(error)
     }
