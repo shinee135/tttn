@@ -67,7 +67,7 @@ export const getDiseasesByName = async(req, res, next) =>{
         next(error)
     }
 }
-export const getDiseasesStatus = async(req, res, next) =>{
+export const getDiseasesByStatus = async(req, res, next) =>{
     try {
         const q = req.query;
         

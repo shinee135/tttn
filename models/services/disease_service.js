@@ -94,9 +94,7 @@ export const getDiseasesByNameService = async(name_disease)=>{
             include:[
                 {
                     model:db.status,
-                }
-            ],
-            include:[
+                },
                 {
                     model:db.diet,
                 }
@@ -115,10 +113,8 @@ export const getDiseasesByStatusService = async(name_status)=>{
             include:[
                 {
                     model:db.status,
-                    where : name_status
-                }
-            ],
-            include:[
+                    where :name_status
+                },
                 {
                     model:db.diet,
                 }
