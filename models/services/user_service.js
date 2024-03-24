@@ -17,9 +17,9 @@ function getBMICategory(bmi) {
     else return 5;
 }
 
-export const updateUserService = async (data, id) =>{
+export const updateUserService = async (height,weight, id) =>{
     try {
-        const userUpdate = await db.user.update(data, {
+        const userUpdate = await db.user.update({height : height,weight : weight}, {
             where: {id}
         })
         if(!userUpdate || userUpdate[0] == 0) return createError(400, 'Update không thành công!')
